@@ -45,3 +45,20 @@ The script will generate a random uuid to ensure the resource are unique within 
 * Registry: `letsgo0798creg`
 
 
+### Modify other configs 
+```VM_SIZE=Standard_D2s_v3
+MIN_NODE_COUNT=3
+MAX_NODE_COUNT=4
+KUBE_VERSION=1.17.7
+LOCATION=westeurope
+network_prefix='10.3.0.0/16'
+network_aks_subnet='10.3.0.0/22'
+network_aks_system='10.3.4.0/24'
+LB_IDLE_TIMEOUT=10
+OS_DISK_SIZE=50
+## Some basic tags 
+tags=`echo Environment=dev Project=minipoc Department=engineering`
+pool_tags=`echo Environment=dev Project=minipoc Department=engineering` ```
+
+
+
