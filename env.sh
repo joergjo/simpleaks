@@ -10,4 +10,4 @@ ACR_REGISTRY=""
 ## Optional Azure log analytics Workspace ID. If empty a new one will be created 
 WORKSPACE_ID=""
 ## Optional Subnetid.AKS will be deployed into this subnet. If empty a new one will be created 
-SUBNET=""
+SUBNET_ID=""
