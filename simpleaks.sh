@@ -144,9 +144,7 @@ az aks create \
  --nodepool-tags $pool_tags \
  --nodepool-labels $pool_tags \
  --generate-ssh-keys \
- --zones 3 \
- --attach-acr $ACR_REGISTRY 
-
+ --zones 3 
 ##  --enable-aad \
 ## --aad-admin-group-object-ids "f7976ea3-24ae-40a2-b546-00c369910444" \
 echo "adding system pool "
