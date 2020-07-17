@@ -1,6 +1,6 @@
 # simpleaks
 Simple script to bring up a AKS cluster that is integrated with ACR registry, Log Analytics and a Subnet. 
-If not of these are defined then the script will created them. The brings up a landscape with the following features. 
+If none of these are defined then the script will created them. The brings up a landscape with the following features. 
 * Enables Autoscaler, sets a min and max node count. 
 * integrated with a Registry so the cluster can pull images 
 * Deploys Container insight 
