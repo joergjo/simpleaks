@@ -148,7 +148,7 @@ az aks create \
 ##  --enable-aad \
 ## --aad-admin-group-object-ids "f7976ea3-24ae-40a2-b546-00c369910444" \
 echo "adding system pool "
-az aks nodepool add -g $RESOURCE_GROUP --cluster-name $AKS_CLUSTER -n systemnodes --mode system 
+az aks nodepool add -g $RESOURCE_GROUP --cluster-name $AKS_CLUSTER -n systemnodes --node-taints CriticalAddonsOnly=true:NoSchedule --mode system
 # security policy  
 
 # --enable-pod-security-policy  \
