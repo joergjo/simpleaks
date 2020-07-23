@@ -58,7 +58,21 @@ LB_IDLE_TIMEOUT=10
 OS_DISK_SIZE=50
 ## Some basic tags 
 tags=`echo Environment=dev Project=minipoc Department=engineering`
-pool_tags=`echo Environment=dev Project=minipoc Department=engineering` ```
+pool_tags=`echo Environment=dev Project=minipoc Department=engineering` 
 
+```
 
+## Setup Flux and gitops 
+th
+ 
+### Fork Repo
+ * Fork git repo https://github.com/ivanthelad/configrepo
+ * In flux.sh replace REPO_USER's value with the your user. The script will then deploy all resource from  https://github.com/$REPO_USER/configrepo 
+### Generate ssh.key
+Flux needs to authenicate against the git repo. We need to generate a ssh private key locally and upload public key to [git hub!](https://docs.github.com/en/github/authenticating-to-github/adding-a-new-ssh-key-to-your-github-account). First we need to generate a sshkey. if you already have an exiting key then simply reference it my  updating the field `SSH_PRIVATE_KEY` in `./flux.sh`
+ * `ssh-keygen -t rsa -f ~/.ssh/githubid_rsa -q -P ""`
+ * upload the generated key found under ` ~/.ssh/githubid_rsa.pub` to your github [account!](https://docs.github.com/en/github/authenticating-to-github/adding-a-new-ssh-key-to-your-github-account) 
 
+### Prerequistes
+Ensure you are logged into the kubernetes cluster 
+* `` 
