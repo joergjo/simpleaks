@@ -1,7 +1,8 @@
 # simpleaks
 Simple script to bring up a AKS cluster that is integrated with ACR registry, Log Analytics and a Subnet. It deploy a seperated isolated VNET with APPGW. The AppGw will serve as the central ingrees point.   
-:warning: This script requires the AppGw addon to be enabled 
-:warning: This script requires that you have owner rights on the subscription. 
+* :warning: This script requires the AppGw addon to be enabled 
+* :warning: This script requires that you have owner rights on the subscription. 
+* :warning: The script requires a the App Gw preview to be used. a help script is provided to enable this `appgw-addon.sh`
 
 If none of these are defined then the script will created them. The brings up a landscape with the following features. 
 * Enables Autoscaler, sets a min and max node count. 
@@ -19,9 +20,9 @@ The purpose is to ensure the AKS cluster and AKSvnet is not directly exposed to 
 ![GitHub Logo](/images/appgw.png)
 # How to Deploy
 
-:warning: This script requires the AppGw addon preview to be enabled 
-:warning: This script requires that you have owner rights on the subscription. 
-:warning: This script requires that the SP has owner rights also
+* :warning: This script requires the AppGw addon preview to be enabled 
+* :warning: This script requires that you have owner rights on the subscription. 
+* :warning: This script requires that the SP has owner rights also
 ### Config setup
 The script expects the following variables are set in a file called ./env.sh on relative path of `./simpleaks.sh.` Simply create this file or set the variables. The `env.sh` file is loaded as a source in `simpleAKS.sh`
 * `SUBSCRIPTIONID`
