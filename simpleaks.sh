@@ -58,15 +58,17 @@ echo "Creating cluster with name $aksname "
 
 RESOURCE_GROUP=$aksname
 AKS_CLUSTER=$aksname
-
+INGRESS_SUBNET_ID=""
 VM_SIZE=Standard_D2s_v3
 MIN_NODE_COUNT=3
 MAX_NODE_COUNT=4
-KUBE_VERSION=1.17.7
+KUBE_VERSION=1.17.9
 LOCATION=westeurope
 network_prefix='10.3.0.0/16'
 network_aks_subnet='10.3.0.0/22'
 network_aks_system='10.3.4.0/24'
+network_aks_ingress='10.3.5.0/24'
+
 LB_IDLE_TIMEOUT=10
 OS_DISK_SIZE=50
 ## Some basic tags 
@@ -102,7 +104,9 @@ then
       echo "SUBNET_ID is empty, Gona create a custom vnet in RG $RESOURCE_GROUP "
       az network vnet create -g $RESOURCE_GROUP -n $aksname --address-prefix $network_prefix  --tags $tags --subnet-name aks --subnet-prefix $network_aks_subnet -l $LOCATION  --subscription $SUBSCRIPTIONID
       SUBNET_ID="$(az network vnet subnet list --resource-group $RESOURCE_GROUP --vnet-name $aksname --query [].id --output tsv  --subscription $SUBSCRIPTIONID   | grep aks)"
-    
+      az network vnet subnet create -n ingress --vnet-name $aksname --address-prefix $network_aks_ingress  -g $RESOURCE_GROUP
+      INGRESS_SUBNET_ID="$(az network vnet subnet list --resource-group $RESOURCE_GROUP --vnet-name $aksname --query [].id --output tsv  --subscription $SUBSCRIPTIONID   | grep aks)"
+
     
 else
       echo "\SUBNET_ID is is NOT empty. using $SUBNET_ID "
@@ -144,15 +148,26 @@ az aks create \
  --nodepool-tags $pool_tags \
  --nodepool-labels $pool_tags \
  --generate-ssh-keys \
- --zones 3 
+ --node-resource-group $RESOURCE_GROUP-managed \
+ --enable-managed-identity \
+ --skip-subnet-role-assignment \
+ --zones 3 --attach-acr $ACR_REGISTRY 
 ##  --enable-aad \
 ## --aad-admin-group-object-ids "f7976ea3-24ae-40a2-b546-00c369910444" \
 echo "adding system pool "
 az aks nodepool add -g $RESOURCE_GROUP --cluster-name $AKS_CLUSTER -n systemnodes --node-taints CriticalAddonsOnly=true:NoSchedule --mode system
+echo "traefik ingress pool"
+if  isempty "INGRESS_SUBNET_ID" "$INGRESS_SUBNET_ID"; then 
+     echo -e "      \e[31mError\e[0m: no ingress subnet id found. will not create pool"
+     errors=$((errors+1))
+else 
+      az aks nodepool add -g $RESOURCE_GROUP --cluster-name $AKS_CLUSTER -n ingress --vnet-subnet-id $INGRESS_SUBNET_ID --node-taints IngressOnly=true:NoSchedule --node-count=2 --node-count=2 --tags="Ingress=true"
+
+fi
+
 # security policy  
 
 # --enable-pod-security-policy  \
-
 az aks get-credentials -n $AKS_CLUSTER -g $RESOURCE_GROUP
 
 exit 0;

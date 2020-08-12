@@ -11,10 +11,10 @@ else
     ssh-keygen -t rsa -f $SSH_PRIVATE_KEY -q -P ""
 fi
 ## works 
-
-
+## --sync-garbage-collection
+## see  here for chart config https://github.com/fluxcd/flux/blob/master/chart/flux/values.yaml
 kubectl create secret generic flux-git-deploy --from-file=identity=$SSH_PRIVATE_KEY -n flux
-helm upgrade -i flux fluxcd/flux --set sync.interval=2m --set git.url=git@github.com:ivanthelad/configrepo --set git-readonly=true   --set helm.versions=v3    --namespace flux --set git.secretName=flux-git-deploy --set registry.acr.enabled=true 
+helm upgrade -i flux fluxcd/flux  -f values.yaml --set syncGarbageCollection.enabled=true  d --set sync.interval=2m --set git.url=git@github.com:ivanthelad/configrepo --set git-readonly=true   --set helm.versions=v3    --namespace flux --set git.secretName=flux-git-deploy --set registry.acr.enabled=true 
 helm upgrade -i helm-operator fluxcd/helm-operator \
    --set git.ssh.secretName=flux-git-deploy  --set helm.versions=v3\
    --namespace flux

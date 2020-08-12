@@ -75,4 +75,7 @@ Flux needs to authenicate against the git repo. We need to generate a ssh privat
 
 ### Prerequistes
 Ensure you are logged into the kubernetes cluster 
-* `` 
+* ``
+
+
+//todo Add codeless attach 
