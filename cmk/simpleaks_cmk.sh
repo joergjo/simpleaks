@@ -1,6 +1,6 @@
 #!/bin/bash
 ## neable app insights https://github.com/microsoft/Application-Insights-K8s-Codeless-Attach
-source ./env.sh 
+source ../env.sh 
 uuid=$(openssl rand -hex 32 | tr -dc 'a-zA-Z0-9' | fold -w 5  | head -n 1)
 clusternameparam=$1
 function  isempty ()
@@ -64,11 +64,7 @@ echo "Creating cluster with name $aksname "
 RESOURCE_GROUP=$aksname
 AKS_CLUSTER=$aksname
 INGRESS_SUBNET_ID=""
-VM_SIZE=Standard_D2s_v3
-MIN_NODE_COUNT=3
-MAX_NODE_COUNT=4
-KUBE_VERSION=1.17.9
-LOCATION=westeurope
+
 network_prefix='10.3.0.0/16'
 network_aks_subnet='10.3.0.0/22'
 network_aks_system='10.3.4.0/24'
@@ -114,11 +110,11 @@ then
       echo "AKS_IDENTITY is empty, Gona create a identity in RG $RESOURCE_GROUP "
       ## Lets create an identity 
 
-      az identity create --name $aksname-aks-userassignedident --resource-group $RESOURCE_GROUP
+      az identity create --name $aksname-aks-controlplane --resource-group $RESOURCE_GROUP
       ## Finding an identity
       ## old way AKS_IDENTITY_ID=$(az identity list --query "[?name=='shinny-8ea6b-agentpool'].{Id:id}" -o tsv)
-      AKS_IDENTITY_ID=$(az identity show --name $aksname-aks-userassignedident --resource-group $RESOURCE_GROUP --query 'id' --output tsv)
-      AKS_IDENTITY_ID_PRINCIPALID=$(az identity show --name $aksname-aks-userassignedident --resource-group $RESOURCE_GROUP --query 'principalId' --output tsv)
+      AKS_IDENTITY_ID=$(az identity show --name $aksname-aks-controlplane --resource-group $RESOURCE_GROUP --query 'id' --output tsv)
+      AKS_IDENTITY_ID_PRINCIPALID=$(az identity show --name $aksname-aks-controlplane --resource-group $RESOURCE_GROUP --query 'principalId' --output tsv)
   
 else
       echo "\AKS_IDENTITY_ID is is NOT empty. using $AKS_IDENTITY_ID "
@@ -148,7 +144,7 @@ az aks create \
  --enable-managed-identity \
  --assign-identity $AKS_IDENTITY_ID \
  --resource-group $RESOURCE_GROUP \
- --network-plugin "kubenet" \
+ --network-plugin $NETWORK_PLUGIN \
  --node-count $MIN_NODE_COUNT \
  --node-vm-size=$VM_SIZE \
  --kubernetes-version=$KUBE_VERSION \
@@ -177,7 +173,7 @@ az aks create \
  --zones 3 \
  --attach-acr $ACR_REGISTRY  
 echo "AKS Deployed "
- exit; 
+ exit 0; 
 ##  --enable-aad \
 ## --aad-admin-group-object-ids "f7976ea3-24ae-40a2-b546-00c369910444" \
 echo "adding system pool "

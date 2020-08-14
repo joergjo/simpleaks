@@ -17,3 +17,11 @@ SUBNET_ID=""
 AKS_IDENTITY_ID=""
 ## Required EncryptionSetid. if not found the the script will abort. required for aks to encrypt the hosts disks. 
 DISK_ENCRYPTION_SET_ID=""
+VM_SIZE=Standard_D2s_v3
+MIN_NODE_COUNT=3
+MAX_NODE_COUNT=4
+KUBE_VERSION=1.17.9
+LOCATION=westeurope
+
+## kubenet or azure
+NETWORK_PLUGIN="kubenet"

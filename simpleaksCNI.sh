@@ -59,11 +59,7 @@ echo "Creating cluster with name $aksname "
 RESOURCE_GROUP=$aksname
 AKS_CLUSTER=$aksname
 INGRESS_SUBNET_ID=""
-VM_SIZE=Standard_D2s_v3
-MIN_NODE_COUNT=3
-MAX_NODE_COUNT=4
-KUBE_VERSION=1.17.7
-LOCATION=westeurope
+
 network_prefix='10.3.0.0/16'
 network_aks_subnet='10.3.0.0/22'
 network_aks_system='10.3.4.0/24'
@@ -121,12 +117,15 @@ echo $SUBNET_ID
 ## --service-principal $SP_ID \
 ## --client-secret $SP_PASS \
 
+# setting 
+
+NETWORK_PLUGIN="azure"
 #Create AKS Cluster with Service Principle
 az aks create \
  --service-principal $SP_ID \
  --client-secret $SP_PASS \
  --resource-group $RESOURCE_GROUP \
- --network-plugin "azure" \
+ --network-plugin $NETWORK_PLUGIN \
  --node-count $MIN_NODE_COUNT \
  --node-vm-size=$VM_SIZE \
  --kubernetes-version=$KUBE_VERSION \

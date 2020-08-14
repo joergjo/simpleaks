@@ -38,7 +38,7 @@ function  sanitycheck ()
           exit 1;
       fi 
 }
-sanitycheck
+##sanitycheck
  
 
 KEYVAULT="$clusternameparam"
