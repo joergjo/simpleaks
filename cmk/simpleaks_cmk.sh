@@ -149,7 +149,7 @@ az aks create \
  --node-vm-size=$VM_SIZE \
  --kubernetes-version=$KUBE_VERSION \
  --name $AKS_CLUSTER \
- --docker-bridge-address "19.5.0.1/16" \
+ --docker-bridge-address "172.17.0.1/16" \
  --dns-service-ip "10.19.0.10" \
  --service-cidr "10.19.0.0/16" \
  --location $LOCATION \
