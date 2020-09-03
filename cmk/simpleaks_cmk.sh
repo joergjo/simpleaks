@@ -35,8 +35,12 @@ function  sanitycheck ()
       if  isempty "SUBSCRIPTIONID" "$SUBSCRIPTIONID"; then
             errors=$((errors+1))
       fi
-    if  isempty "DISK_ENCRYPTION_SET_ID" "$DISK_ENCRYPTION_SET_ID"; then
+      if  isempty "DISK_ENCRYPTION_SET_ID" "$DISK_ENCRYPTION_SET_ID"; then
             echo -e "      \e[31m DISK_ENCRYPTION_SET_ID is not set. aborting \e[0m "
+             errors=$((errors+1))
+      fi
+      if  isempty "AAD_ADMIN_GROUP_ID" "$AAD_ADMIN_GROUP_ID"; then
+            echo -e "      \e[31m AAD_ADMIN_GROUP_ID is not set. aborting \e[0m "
              errors=$((errors+1))
       fi
       if  isempty "WORKSPACE_ID" "$WORKSPACE_ID"; then
@@ -177,7 +181,10 @@ az aks create \
  --skip-subnet-role-assignment \
  --node-osdisk-diskencryptionset-id $DISK_ENCRYPTION_SET_ID \
  --zones 3 \
- --attach-acr $ACR_REGISTRY
+ --attach-acr $ACR_REGISTRY \
+ --enable-aad \
+ --aad-admin-group-object-ids $AAD_ADMIN_GROUP_ID
+
 echo "AKS Deployed "
  exit 0;
 ##  --enable-aad \
@@ -194,4 +201,3 @@ else
 fi
 
 # security policy
-
