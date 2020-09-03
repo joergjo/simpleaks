@@ -1,5 +1,5 @@
 #!/bin/bash
-## neable app insights https://github.com/microsoft/Application-Insights-K8s-Codeless-Attach
+## enable app insights https://github.com/microsoft/Application-Insights-K8s-Codeless-Attach
 source ../env.sh
 uuid=$(openssl rand -hex 32 | tr -dc 'a-zA-Z0-9' | fold -w 5  | head -n 1)
 clusternameparam=$1
@@ -82,9 +82,8 @@ pool_tags=`echo Environment=dev Project=minipoc Department=engineering`
 
 ## az acr show --name aksonazure      --resource-group aksonazure      --query "id" --output tsv
 
-#Create a RG
-az group create --name  $RESOURCE_GROUP -l $LOCATION  --subscription $SUBSCRIPTIONID --tags $tags
-
+# Create a RG and grab its resource id
+RESOURCE_GROUP_ID=$(az group create --name $RESOURCE_GROUP -l $LOCATION --subscription $SUBSCRIPTIONID --tags $tags --query id -o tsv)
 
 if test -z "$WORKSPACE_ID"
 then
@@ -134,9 +133,24 @@ else
       echo "\ACR_REGISTRY is is NOT empty. using $ACR_REGISTRY "
 fi
 
-#Create a AKS subnet. not needed. created above.
-#az network vnet subnet create -g $RESOURCE_GROUP --vnet-name iotsuite -n $AKS_CLUSTER  --address-prefix 10.0.1.0/24  --subscription $SUBSCRIPTIONID
-
+# Grant read on Disk Encryption Set
+# See https://docs.microsoft.com/en-us/azure/aks/azure-disk-customer-managed-keys#encrypt-your-aks-cluster-data-diskoptional
+DISK_ENCRYPTION_SET_RESOURCE_GROUP=$(az resource show --id $DISK_ENCRYPTION_SET_ID --query resourceGroup -o tsv)
+DISK_ENCRYPTION_SET_RESOURCE_GROUP_ID=$(az group show -g $DISK_ENCRYPTION_SET_RESOURCE_GROUP --query id -o tsv)
+az role assignment create \
+    --assignee-object-id $AKS_IDENTITY_ID_PRINCIPALID \
+    --scope $DISK_ENCRYPTION_SET_RESOURCE_GROUP_ID \
+    --role "Contributor"
+# Grant Network Contributor and Storage Account Contributor
+# See https://docs.microsoft.com/en-us/azure/aks/kubernetes-service-principal
+az role assignment create \
+    --assignee-object-id $AKS_IDENTITY_ID_PRINCIPALID  \
+    --scope $RESOURCE_GROUP_ID \
+    --role "Network Contributor"
+az role assignment create \
+    --assignee-object-id $AKS_IDENTITY_ID_PRINCIPALID  \
+    --scope $RESOURCE_GROUP_ID \
+    --role "Storage Account Contributor"
 
 #List Subnet belonging to VNET
 echo $SUBNET_ID
