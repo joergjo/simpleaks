@@ -49,6 +49,7 @@ The script expects the following variables are set in a file called ./env.sh on 
 -   `WORKSPACE_ID `(optional)
 -   `SUBNET_ID `(optional)
 -   `AKS_IDENTITY_ID` (optional)
+-   `RESOURCE_GROUP` (optional)
 
 ```
 ## Subscription where everything will be deployed
