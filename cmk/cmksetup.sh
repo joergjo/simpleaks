@@ -121,12 +121,12 @@ echo "13: creating ACR "
 ## create the ACR with key
 az acr create \
   --resource-group $RESOURCE_GROUP \
-  --name ${clusternameparam}ACR \
+  --name ${clusternameparam} \
   --identity $ACR_IDENTITY_ID \
   --key-encryption-key $keyVaultKeyUrl \
   --sku Premium
 echo "13: creating ACR ID "
-ACR_REGISTRY_ID=$(az acr show -n  ${clusternameparam}ACR -g $RESOURCE_GROUP --query 'id' -o tsv)
+ACR_REGISTRY_ID=$(az acr show -n  ${clusternameparam} -g $RESOURCE_GROUP --query 'id' -o tsv)
 echo "14: Got DISK_ENCRYPTION_SET_ID $DISK_ENCRYPTION_SET_ID "
 echo -e "      \e[33m DISK_ENCRYPTION_SET_ID found, please copy past this ID and use it in 'az aks create --node-osdisk-diskencryptionset-id=$DISK_ENCRYPTION_SET_ID '\e[0m: "
 

@@ -24,6 +24,7 @@ MIN_NODE_COUNT=3
 MAX_NODE_COUNT=4
 KUBE_VERSION=1.17.9
 LOCATION=westeurope
+RESOURCE_GROUP=aks-private-cluster
 
 ## kubenet or azure
 NETWORK_PLUGIN="kubenet"

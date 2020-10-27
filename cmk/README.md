@@ -27,7 +27,7 @@ This script creates the following.
 
 The script outputs two variables that are intended to be used when creating CMK based cluster. You should add these to the `./env.sh` environment variable file. These variables can be resued across multiple cluster creations.
 
--   `ACR_REGISTRY_ID`: If found when executing `./simpleaks_cmk.sh` then this registry will be used for images by the cluster
+-   `ACR_REGISTRY`: If found when executing `./simpleaks_cmk.sh` then this registry will be used for images by the cluster
 -   `DISK_ENCRYPTION_SET_ID`: If found when executing `./simpleaks_cmk.sh` then this encycptionset will be used to encypte all the disks on a aks cluster. if not found the script will abort
 
 Also, update `AAD_ADMIN_GROUP_ID`obtained from the first step.
@@ -45,9 +45,9 @@ The script expects the following variables are set in a file called ./env.sh on 
 -   `SP_PASS`
 -   `DISK_ENCRYPTION_SET_ID`
 -   `AAD_ADMIN_GROUP_ID`
--   `ACR_REGISTRY `(optional)
--   `WORKSPACE_ID `(optional)
--   `SUBNET_ID `(optional)
+-   `ACR_REGISTRY`
+-   `WORKSPACE_ID ` (optional)
+-   `SUBNET_ID ` (optional)
 -   `AKS_IDENTITY_ID` (optional)
 -   `RESOURCE_GROUP` (optional)
 
@@ -99,5 +99,5 @@ There are 2 scripts that setup the CMK with AKS environmnet.
 1. Execute `./cmksetup.sh $UniqueNameForKeyVault`
 1. Copy and paste the output variables from the `./cmksetup` into `../env.sh`
     1. DISK_ENCRYPTION_SET_ID
-    1. AKS_IDENTITY_ID
+    1. ACR_REGISTRY
 1. Execute `./simple_cmk.sh $UniqueNameForAKS`

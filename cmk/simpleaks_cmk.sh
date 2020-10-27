@@ -82,7 +82,7 @@ pool_tags=`echo Environment=dev Project=minipoc Department=engineering`
 ## az acr show --name aksonazure      --resource-group aksonazure      --query "id" --output tsv
 
 # Create a RG and grab its resource id
-RESOURCE_GROUP_ID=$(az group show --name $RESOURCE_GROUP -l $LOCATION --subscription $SUBSCRIPTIONID --tags $tags --query id -o tsv)
+RESOURCE_GROUP_ID=$(az group show --name $RESOURCE_GROUP --subscription $SUBSCRIPTIONID --query id -o tsv)
 
 if test -z "$WORKSPACE_ID"
 then
@@ -194,7 +194,7 @@ az aks create \
  --enable-private-cluster
 
 echo "AKS Deployed "
- exit 0;
+exit 0;
 ##  --enable-aad \
 ## --aad-admin-group-object-ids "f7976ea3-24ae-40a2-b546-00c369910444" \
 echo "adding system pool "
