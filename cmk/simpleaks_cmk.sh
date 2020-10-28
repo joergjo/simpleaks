@@ -65,7 +65,6 @@ aksname="$clusternameparam"
 registryname="${clusternameparam}reg"
 echo "Creating cluster with name $aksname "
 
-RESOURCE_GROUP=$aksname
 AKS_CLUSTER=$aksname
 INGRESS_SUBNET_ID=""
 
@@ -83,7 +82,7 @@ pool_tags=`echo Environment=dev Project=minipoc Department=engineering`
 ## az acr show --name aksonazure      --resource-group aksonazure      --query "id" --output tsv
 
 # Create a RG and grab its resource id
-RESOURCE_GROUP_ID=$(az group create --name $RESOURCE_GROUP -l $LOCATION --subscription $SUBSCRIPTIONID --tags $tags --query id -o tsv)
+RESOURCE_GROUP_ID=$(az group show --name $RESOURCE_GROUP --subscription $SUBSCRIPTIONID --query id -o tsv)
 
 if test -z "$WORKSPACE_ID"
 then
@@ -191,10 +190,11 @@ az aks create \
  --zones 3 \
  --attach-acr $ACR_REGISTRY \
  --enable-aad \
- --aad-admin-group-object-ids $AAD_ADMIN_GROUP_ID
+ --aad-admin-group-object-ids $AAD_ADMIN_GROUP_ID \
+ --enable-private-cluster
 
 echo "AKS Deployed "
- exit 0;
+exit 0;
 ##  --enable-aad \
 ## --aad-admin-group-object-ids "f7976ea3-24ae-40a2-b546-00c369910444" \
 echo "adding system pool "
